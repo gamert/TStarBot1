@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import numpy as np
 import gym
-from pysc2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
+from pyxs2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
 
 from sc2learner.envs.spaces.pysc2_raw import PySC2RawObservation
 from sc2learner.envs.common.const import ALLY_TYPE

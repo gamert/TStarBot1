@@ -3,8 +3,8 @@ from __future__ import division
 from __future__ import print_function
 
 import gym
-from pysc2.env import sc2_env
-from pysc2.env import lan_sc2_env
+from pyxs2.env import sc2_env
+from pyxs2.env import lan_sc2_env
 
 from sc2learner.envs.spaces.pysc2_raw import PySC2RawAction
 from sc2learner.envs.spaces.pysc2_raw import PySC2RawObservation

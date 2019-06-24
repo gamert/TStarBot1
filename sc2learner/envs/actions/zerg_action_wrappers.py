@@ -7,10 +7,10 @@ import platform
 import numpy as np
 import gym
 from gym.spaces.discrete import Discrete
-from pysc2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
-from pysc2.lib.typeenums import UPGRADE_ID as UPGRADE
-from pysc2.lib import point
-from s2clientprotocol import sc2api_pb2 as sc_pb
+from pyxs2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
+from pyxs2.lib.typeenums import UPGRADE_ID as UPGRADE
+from pyxs2.lib import point
+from xs2clientprotocol import sc2api_pb2 as sc_pb
 
 from sc2learner.envs.spaces.pysc2_raw import PySC2RawObservation
 from sc2learner.envs.spaces.mask_discrete import MaskDiscrete

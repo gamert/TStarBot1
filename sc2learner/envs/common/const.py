@@ -6,7 +6,7 @@ from enum import Enum
 from enum import unique
 from collections import namedtuple
 
-from pysc2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
+from pyxs2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
 
 
 @unique

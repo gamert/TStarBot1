@@ -4,7 +4,7 @@ from __future__ import print_function
 
 import itertools
 
-from pysc2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
+from pyxs2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
 
 from sc2learner.envs.common.const import ALLY_TYPE
 from sc2learner.envs.common.const import PLAYER_FEATURE

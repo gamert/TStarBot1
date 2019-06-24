@@ -2,11 +2,11 @@ from __future__ import absolute_import
 from __future__ import division
 from __future__ import print_function
 
-from s2clientprotocol import sc2api_pb2 as sc_pb
-from pysc2.lib.tech_tree import TechTree
-from pysc2.lib.unit_controls import Unit
-from pysc2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
-from pysc2.lib.typeenums import ABILITY_ID as ABILITY
+from xs2clientprotocol import sc2api_pb2 as sc_pb
+from pyxs2.lib.tech_tree import TechTree
+from pyxs2.lib.unit_controls import Unit
+from pyxs2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
+from pyxs2.lib.typeenums import ABILITY_ID as ABILITY
 
 from sc2learner.envs.actions.function import Function
 from sc2learner.envs.actions.placer import Placer

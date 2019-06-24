@@ -6,7 +6,7 @@
 </p>
 
 *[SC2Learner](https://github.com/Tencent/TStarBot1)* is a *macro-action*-based [StarCraft-II](https://en.wikipedia.org/wiki/StarCraft_II:_Wings_of_Liberty) reinforcement learning research platform.
-It exposes the re-designed StarCraft-II action space, which has more than one hundred discrete macro actions, based on the raw APIs exposed by DeepMind and Blizzard's [PySC2](https://github.com/deepmind/pysc2).
+It exposes the re-designed StarCraft-II action space, which has more than one hundred discrete macro actions, based on the raw APIs exposed by DeepMind and Blizzard's [PySC2](https://github.com/deepmind/pyxs2).
 The macro action space relieves the learning algorithms from a disastrous burden of directly handling a massive number of atomic keyboard and mouse operations, making learning more tractable.
 The environments and wrappers strictly follow the interface of [OpenAI Gym](https://github.com/openai/gym), making it easier to be adapted to many off-the-shelf reinforcement learning algorithms and implementations.
 
@@ -82,7 +82,7 @@ When run across two machines, `--remote` argument needs to be set for the human 
 
 - Start a human player client
 ```bash
-CUDA_VISIBLE_DEVICES= python3 -m pysc2.bin.play_vs_agent --human --map AbyssalReef --user_race zerg
+CUDA_VISIBLE_DEVICES= python3 -m pyxs2.bin.play_vs_agent --human --map AbyssalReef --user_race zerg
 ```
 
 - Start a PPO agent
