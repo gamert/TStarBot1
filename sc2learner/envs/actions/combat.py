@@ -22,6 +22,9 @@ Region = namedtuple('Region', ('ranges', 'rally_point_a', 'rally_point_b'))
 class CombatActions(object):
 
   def __init__(self):
+
+    ## 定义一个9宫格？: 范围为 (0, 0, 200, 176) TODO 全地图？ 聚集点？要根据地图来指定？
+    ## @:
     self._regions = [
         Region([(0, 0, 200, 176)], (161.5, 21.5), (38.5, 122.5)),
         Region([(0, 88, 80, 176)], (68, 108), (68, 108)),
@@ -36,6 +39,7 @@ class CombatActions(object):
     ]
     self._flip_region = lambda r_id: 10 - r_id if r_id > 0 else r_id
 
+    #攻击任务...
     self._attack_tasks = {}
 
   def reset(self):
@@ -89,6 +93,7 @@ class CombatActions(object):
 
     return is_valid
 
+  # 集合新的战斗单位...
   def _rally_new_combat_units(self, dc):
     new_combat_units = [u for u in dc.combat_units if dc.is_new_unit(u)]
     if self._player_position(dc) == 0:
@@ -102,6 +107,7 @@ class CombatActions(object):
     if len(new_combat_units) > 0: return True
     else: return False
 
+  #逐帧集合攻击
   def _framewise_rally_and_attack(self, dc):
     actions = []
     for region_id in range(len(self._regions)):
@@ -124,6 +130,7 @@ class CombatActions(object):
           actions.extend(self._micro_rally(units_with_task, rally_point, dc))
     return actions
 
+  # 微操
   def _micro_attack(self, combat_units, enemy_units, dc):
 
     def prioritized_attack(unit, target_units):
@@ -138,6 +145,7 @@ class CombatActions(object):
                     closest_target.float_attr.pos_y)
       return self._unit_attack(unit, target_pos, dc)
 
+    # 逃走 飞?
     def flee_or_fight(unit, target_units):
       assert len(target_units) > 0
       closest_target = utils.closest_unit(unit, target_units)
@@ -192,6 +200,7 @@ class CombatActions(object):
       actions.extend(self._unit_attack(unit, rally_point, dc))
     return actions
 
+  # 单位攻击...
   def _unit_attack(self, unit, target_pos, dc):
     # move with attack
     if unit.unit_type == UNIT_TYPE.ZERG_RAVAGER.value:
@@ -214,6 +223,7 @@ class CombatActions(object):
     else:
       return self._normal_unit_move(unit, target_pos)
 
+  # 普通单位
   def _normal_unit_attack(self, unit, target_pos):
     action = sc_pb.Action()
     action.action_raw.unit_command.unit_tags.append(unit.tag)
@@ -257,6 +267,7 @@ class CombatActions(object):
     actions.extend(self._normal_unit_move(unit, target_pos))
     return actions
 
+  # 潜伏者
   def _lurker_unit_attack(self, unit, target_pos, dc):
     actions = []
     ground_enemies = [u for u in dc.units_of_alliance(ALLY_TYPE.ENEMY.value)
@@ -272,6 +283,7 @@ class CombatActions(object):
       actions.extend(self._lurker_unit_move(unit, target_pos))
     return actions
 
+  # 潜伏者
   def _lurker_unit_move(self, unit, target_pos):
     actions = []
     if unit.unit_type == UNIT_TYPE.ZERG_LURKERMPBURROWED.value:
@@ -282,6 +294,7 @@ class CombatActions(object):
     actions.extend(self._normal_unit_move(unit, target_pos))
     return actions
 
+  # 毁坏单位
   def _ravager_unit_attack(self, unit, target_pos, dc):
     actions = []
     ground_units = [u for u in dc.units_of_alliance(ALLY_TYPE.SELF.value)

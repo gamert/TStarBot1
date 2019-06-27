@@ -13,7 +13,9 @@ from sc2learner.envs.actions.placer import Placer
 import sc2learner.envs.common.utils as utils
 from sc2learner.envs.common.const import MAXIMUM_NUM
 
-
+##
+## 根据type_id进行建造(建筑)...
+##
 class BuildActions(object):
 
   def __init__(self, game_version='4.1.2'):
@@ -26,6 +28,8 @@ class BuildActions(object):
                     function=self._build_unit(type_id),
                     is_valid=self._is_valid_build_unit(type_id))
 
+  ## 返回一个Action闭包:
+  ## @type_id:
   def _build_unit(self, type_id):
 
     def act(dc):

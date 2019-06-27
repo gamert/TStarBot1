@@ -11,7 +11,9 @@ from sc2learner.envs.common.const import PLAYER_FEATURE
 from sc2learner.envs.common.const import COMBAT_TYPES
 import sc2learner.envs.common.utils as utils
 
-
+##
+## 管理当前的上下文数据...
+##
 class DataContext(object):
 
   def __init__(self):
@@ -20,6 +22,8 @@ class DataContext(object):
     self._raw_data = None
     self._existed_tags = set()
 
+  ## 帧循环？:
+  ## @observation: 从观察者中取得数据信息(cache...)...
   def update(self, observation):
     for u in self._units:
       self._existed_tags.add(u.tag)
@@ -31,6 +35,7 @@ class DataContext(object):
   def reset(self, observation):
     self._existed_tags.clear()
     self.update(observation)
+    ##初始基地...
     init_base = self.units_of_type(UNIT_TYPE.ZERG_HATCHERY.value)[0]
     self._init_base_pos = (init_base.float_attr.pos_x,
                            init_base.float_attr.pos_y)
@@ -41,6 +46,7 @@ class DataContext(object):
   def units_of_type(self, type_id, ally=ALLY_TYPE.SELF.value):
     return [u for u in self.units_of_alliance(ally) if u.unit_type == type_id]
 
+  #长成的
   def mature_units_of_type(self, type_id, ally=ALLY_TYPE.SELF.value):
     return [u for u in self.units_of_type(type_id, ally)
             if u.float_attr.build_progress >= 1.0]

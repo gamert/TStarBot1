@@ -23,7 +23,8 @@ DIFFICULTIES= {
     "A": sc2_env.Difficulty.cheat_insane,
 }
 
-
+##gym.Env: 包含一个Game的实例(用于交互)...
+##
 class SC2RawEnv(gym.Env):
 
   def __init__(self,
@@ -52,10 +53,15 @@ class SC2RawEnv(gym.Env):
     self._reseted = False
     self._first_create = True
 
+    #创建进程和网络链接... SC2Env
     self._sc2_env = self._safe_create_env()
+    #观察者空间..
     self.observation_space = PySC2RawObservation(self._sc2_env.observation_spec)
+    #动作空间...
     self.action_space = PySC2RawAction()
 
+  # !!执行一步:
+  # 返回 @observation 观察者
   def step(self, actions):
     assert self._reseted
     timestep = self._sc2_env.step([actions])[0]
@@ -92,6 +98,8 @@ class SC2RawEnv(gym.Env):
   def close(self):
     self._sc2_env.close()
 
+  ## 返回一个游戏实例Env:
+  ## @:
   def _create_env(self):
     self._random_seed = (self._random_seed + 11) & 0xFFFFFFFF
     players=[sc2_env.Agent(sc2_env.Race[self._agent_race]),

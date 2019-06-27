@@ -12,22 +12,22 @@ from pyxs2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
 @unique
 class ALLY_TYPE(Enum):
   SELF = 1
-  ALLY = 2
-  NEUTRAL = 3
-  ENEMY = 4
+  ALLY = 2      #盟友
+  NEUTRAL = 3   #中立
+  ENEMY = 4     #
 
 
 @unique
 class PLAYER_FEATURE(Enum):
   PLAYER_ID = 0
-  MINERALS = 1
-  VESPENE = 2
+  MINERALS = 1      #矿
+  VESPENE = 2       #气
   FOOD_USED = 3
   FOOD_CAP = 4
   FOOD_ARMY = 5
   FOOD_WORKER = 6
-  IDLE_WORKER_COUNT = 7
-  ARMY_COUNT = 8
+  IDLE_WORKER_COUNT = 7 #空闲工人
+  ARMY_COUNT = 8        #
   WARP_GATE_COUNT = 9
   LARVA_COUNT = 10
 
@@ -35,7 +35,7 @@ class PLAYER_FEATURE(Enum):
 NEUTRAL_DESTRUCTABLEROCKEX14X4 = 638
 NEUTRAL_UNBUILDABLEROCKSDESTRUCIBLE = 472
 
-
+##
 PLACE_COLLISION_BUILDINGS = {
     UNIT_TYPE.NEUTRAL_MINERALFIELD.value,
     UNIT_TYPE.NEUTRAL_MINERALFIELD750.value,
@@ -63,7 +63,7 @@ PLACE_COLLISION_BUILDINGS = {
     UNIT_TYPE.ZERG_GREATERSPIRE.value
 }
 
-
+##
 MAXIMUM_NUM = {
     UNIT_TYPE.ZERG_SPAWNINGPOOL.value: 1,
     UNIT_TYPE.ZERG_ROACHWARREN.value: 1,
@@ -84,7 +84,7 @@ MAXIMUM_NUM = {
 
 AttackAttr = namedtuple('AttackAttr', ('can_attack_ground', 'can_attack_air'))
 
-
+#攻击单位...
 ATTACK_FORCE = {
     UNIT_TYPE.ZERG_LARVA.value: AttackAttr(False, False),
     UNIT_TYPE.ZERG_DRONE.value: AttackAttr(True, False),
@@ -114,9 +114,9 @@ ATTACK_FORCE = {
     UNIT_TYPE.ZERG_NYDUSCANAL.value: AttackAttr(False, False)
 }
 
-
+#可攻击单位...
 PRIORITIZED_ATTACK = set([
-    UNIT_TYPE.ZERG_ZERGLING.value,
+    UNIT_TYPE.ZERG_ZERGLING.value,  # 小狗
     UNIT_TYPE.ZERG_BANELING.value,
     UNIT_TYPE.ZERG_ROACH.value,
     UNIT_TYPE.ZERG_ROACHBURROWED.value,
@@ -133,7 +133,7 @@ PRIORITIZED_ATTACK = set([
     UNIT_TYPE.ZERG_INFESTOR.value,
     UNIT_TYPE.ZERG_ULTRALISK.value,
     UNIT_TYPE.ZERG_BROODLING.value,
-    UNIT_TYPE.ZERG_QUEEN.value,
+    UNIT_TYPE.ZERG_QUEEN.value,     #
     UNIT_TYPE.ZERG_CHANGELING.value,
     UNIT_TYPE.ZERG_SPINECRAWLER.value,
     UNIT_TYPE.ZERG_SPORECRAWLER.value

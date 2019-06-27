@@ -22,9 +22,13 @@ from sc2learner.envs.actions.upgrade import UpgradeActions
 from sc2learner.envs.actions.resource import ResourceActions
 from sc2learner.envs.actions.combat import CombatActions
 
-
+##
+## ...
+##
 class ZergActionWrapper(gym.Wrapper):
 
+  ## 初始化虫族:
+  ## @env: SC2RawEnv by gym.Env
   def __init__(self, env, game_version='4.1.2', mask=False,
                use_all_combat_actions=False):
     super(ZergActionWrapper, self).__init__(env)
@@ -117,10 +121,12 @@ class ZergActionWrapper(gym.Wrapper):
         #for target_region_id in range(self._combat_mgr.num_regions)
     ])
 
+    ##必要的前置动作..
     self._required_pre_actions = [
         self._resource_mgr.action_idle_workers_gather_minerals,
         self._resource_mgr.action_queens_inject_larva
     ]
+    ##必要的后置动作..
     self._required_post_actions = [
         self._combat_mgr.action_rally_new_combat_units,
         self._combat_mgr.action_framewise_rally_and_attack
@@ -129,16 +135,23 @@ class ZergActionWrapper(gym.Wrapper):
     if mask: self.action_space = MaskDiscrete(len(self._actions))
     else: self.action_space = Discrete(len(self._actions))
 
+  ## 执行一步:
+  ## @action: 动作名字
   def step(self, action):
+    #根据action生成一个动作组...
     actions = self._actions[action].function(self._dc)
     pre_actions, post_actions = self._required_actions()
+    # SC2RawEnv.step..
     observation, reward, done, info = self.env.step(
         pre_actions + actions + post_actions)
+    # datacontext:
     self._dc.update(observation)
     if isinstance(self.action_space, MaskDiscrete):
       observation['action_mask'] = self._get_valid_action_mask()
     return observation, reward, done, info
 
+  ## 执行一步:
+  ## @action:
   def reset(self, **kwargs):
     self._combat_mgr.reset()
     observation = self.env.reset()
@@ -156,6 +169,7 @@ class ZergActionWrapper(gym.Wrapper):
     if self._dc.init_base_pos[0] < 100: return 0
     else: return 1
 
+  #返回必要动作
   def _required_actions(self):
     pre_actions = []
     for fn in self._required_pre_actions:
@@ -182,6 +196,9 @@ class ZergActionWrapper(gym.Wrapper):
                     is_valid=lambda dc: True)
 
 
+##
+## ...
+##
 class ZergPlayerActionWrapper(ZergActionWrapper):
 
   def __init__(self, player, **kwargs):

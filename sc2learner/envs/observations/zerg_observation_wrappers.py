@@ -20,9 +20,11 @@ from sc2learner.envs.observations.nonspatial_features import UnitStatCountFeatur
 from sc2learner.envs.observations.nonspatial_features import GameProgressFeature
 from sc2learner.envs.observations.nonspatial_features import ActionSeqFeature
 
-
+## 游戏数据到特征层数据的转换？
+##
 class ZergObservationWrapper(gym.Wrapper):
 
+  # @env:ZergActionWrapper by gym.Wrapper
   def __init__(self, env, use_spatial_features=False, use_game_progress=True,
                action_seq_len=8, use_regions=False):
     super(ZergObservationWrapper, self).__init__(env)
@@ -59,6 +61,7 @@ class ZergObservationWrapper(gym.Wrapper):
                    UNIT_TYPE.ZERG_QUEEN.value],
         use_regions=use_regions
     )
+    # 建筑
     self._building_count_feature = UnitTypeCountFeature(
         type_list=[UNIT_TYPE.ZERG_SPINECRAWLER.value,
                    UNIT_TYPE.ZERG_SPORECRAWLER.value,
@@ -106,8 +109,8 @@ class ZergObservationWrapper(gym.Wrapper):
     if use_spatial_features:
       resolution = self.env.observation_space.space_attr["minimap"][1]
       self._unit_type_count_map_feature = UnitTypeCountMapFeature(
-          type_map={UNIT_TYPE.ZERG_DRONE.value: 0,
-                    UNIT_TYPE.ZERG_ZERGLING.value: 1,
+          type_map={UNIT_TYPE.ZERG_DRONE.value: 0,  #
+                    UNIT_TYPE.ZERG_ZERGLING.value: 1,   #小狗=105
                     UNIT_TYPE.ZERG_ROACH.value: 2,
                     UNIT_TYPE.ZERG_ROACHBURROWED.value: 2,
                     UNIT_TYPE.ZERG_HYDRALISK.value: 3,
@@ -161,11 +164,15 @@ class ZergObservationWrapper(gym.Wrapper):
       else:
         self.observation_space = spaces.Box(0.0, float('inf'), [n_dims],
                                             dtype=np.float32)
-
+  #
   def step(self, action):
+    #
     self._action_seq_feature.push_action(action)
+    # 环境步进: 返回 nameddic
     observation, reward, done, info = self.env.step(action)
+    # 数据上下文更新(从观察者空间dump？):
     self._dc.update(observation)
+    # 观察？
     return self._observation(observation), reward, done, info
 
   def reset(self, **kwargs):
@@ -186,6 +193,8 @@ class ZergObservationWrapper(gym.Wrapper):
       raise NotImplementedError
     return self.env.player_position
 
+  #@observation:
+  # 返回:(spatial_feat, nonspatial_feat)
   def _observation(self, observation):
     need_flip = True if self.env.player_position == 0 else False
 
@@ -200,7 +209,9 @@ class ZergObservationWrapper(gym.Wrapper):
     worker_feat = self._worker_feature.features(self._dc)
     if self._use_game_progress:
       game_progress_feat = self._game_progress_feature.features(observation)
+
     action_seq_feat = self._action_seq_feature.features()
+    # 连接起来
     nonspatial_feat = np.concatenate([
         unit_type_feat,
         building_type_feat,
@@ -218,10 +229,13 @@ class ZergObservationWrapper(gym.Wrapper):
 
     # spatial features
     if self._use_spatial_features:
+      #
       ally_map_feat = self._alliance_count_map_feature.features(
           observation, need_flip)
+      #
       type_map_feat = self._unit_type_count_map_feature.features(
           observation, need_flip)
+      # 连接起来
       spatial_feat = np.concatenate([ally_map_feat, type_map_feat])
 
     # return features

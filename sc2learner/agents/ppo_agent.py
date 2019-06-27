@@ -120,7 +120,9 @@ class Model(object):
 
     tf.global_variables_initializer().run(session=sess)
 
-
+##
+## PPOActor...
+##
 class PPOActor(object):
 
   def __init__(self, env, policy, unroll_length, gamma, lam, queue_size=1,

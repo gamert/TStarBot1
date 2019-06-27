@@ -37,7 +37,7 @@ flags.DEFINE_boolean("use_region_features", False, "Use region features")
 flags.DEFINE_boolean("use_action_mask", True, "Use action mask or not.")
 flags.FLAGS(sys.argv)
 
-
+## 返回一个 ObservationWrapper
 def create_env(random_seed=None):
   env = SC2RawEnv(map_name='AbyssalReef',
                   step_mul=FLAGS.step_mul,
@@ -115,8 +115,10 @@ def evaluate():
       agent.reset()
       done, step_id = False, 0
       while not done:
+        # 根据  observation 选择出动作ID
         action = agent.act(observation)
         print("Step ID: %d	Take Action: %d" % (step_id, action))
+        # 执行新的动作, 并返回observation
         observation, reward, done, _ = env.step(action)
         action_counts[action] += 1
         cum_return += reward

@@ -9,18 +9,24 @@ from pyxs2.lib.tech_tree import TechTree
 
 from sc2learner.envs.actions.function import Function
 
-
+##
+## 根据科技树进行升级...
 class UpgradeActions(object):
 
   def __init__(self, game_version='4.1.2'):
     self._tech_tree = TechTree()
     self._tech_tree.update_version(game_version)
 
+  ## 定义一个升级动作Function（闭包）:
+  ## @func_name:
+  ## @upgrade_id:
   def action(self, func_name, upgrade_id):
     return Function(name=func_name,
                     function=self._upgrade_unit(upgrade_id),
                     is_valid=self._is_valid_upgrade_unit(upgrade_id))
 
+  ## 返回一个Action闭包:
+  ## @upgrade_id:
   def _upgrade_unit(self, upgrade_id):
 
     def act(dc):

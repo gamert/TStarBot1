@@ -9,19 +9,23 @@ from pyxs2.lib.typeenums import ABILITY_ID as ABILITY
 from sc2learner.envs.common.const import ALLY_TYPE
 from sc2learner.envs.common.const import COMBAT_TYPES
 
-
+## 玩家特征: 参考 features.Player
 class PlayerFeature(object):
 
   def features(self, observation):
     player_features = observation["player"][1:-1].astype(np.float32)
+    #
     food_unused = player_features[3] - player_features[2]
+    #
     player_features[-1] = food_unused if food_unused >= 0 else 0
     scale = np.array([2000, 2000, 20, 20, 20, 20, 20, 20, 20], np.float32)
     scaled_features = (player_features / scale).astype(np.float32)
     log_features = np.log10(player_features + 1).astype(np.float32)
 
+    #??
     bins_food_unused = np.zeros(10, dtype=np.float32)
     bin_id = int((max(food_unused, 0) - 1) // 3 + 1) if food_unused <= 27 else 9
+    #
     bins_food_unused[bin_id] = 1
     return np.concatenate((scaled_features, log_features, bins_food_unused))
 
@@ -29,10 +33,11 @@ class PlayerFeature(object):
   def num_dims(self):
     return 9 * 2 + 10
 
-
+## 评分特征: 10项?
 class ScoreFeature(object):
 
   def features(self, observation):
+    # 从第3项开始,共10项，参考 ScoreCumulative
     score_features = observation.score_cumulative[3:].astype(np.float32)
     score_features /= 3000.0
     log_features = np.log10(score_features + 1).astype(np.float32)
@@ -42,9 +47,10 @@ class ScoreFeature(object):
   def num_dims(self):
     return 10 * 2
 
-
+## units分类数量统计特征
 class UnitTypeCountFeature(object):
 
+  # @type_list
   def __init__(self, type_list, use_regions=False):
     self._type_list = type_list
     if use_regions:
@@ -63,6 +69,7 @@ class UnitTypeCountFeature(object):
     self._regions_flipped = [self._regions[0]] + [
         self._regions[10 - i] for i in range(1, len(self._regions))]
 
+  # 返回长度num_dims的特征值数组,每个格子: [scaled(我方*types\敌方*types)、log(...)]
   def features(self, observation, need_flip=False):
     feature_list = []
     for region in (self._regions if not need_flip else self._regions_flipped):
@@ -71,10 +78,15 @@ class UnitTypeCountFeature(object):
       feature_list.append(self._generate_features(units_in_region))
     return np.concatenate(feature_list)
 
+  # 每个区的数据分: len[单位类型]*len[敌、我]*len[scaled、log]
+  # 同种族？不同种族的单位类型数不同？
   @property
   def num_dims(self):
     return len(self._type_list) * len(self._regions) * 2 * 2
 
+  # 生成特征:
+  # @units :
+  # 返回: [scaled([我方单位数]\[敌方单位数])、log(...)]
   def _generate_features(self, units):
     self_units = [u for u in units
                   if u.int_attr.alliance == ALLY_TYPE.SELF.value]
@@ -89,11 +101,14 @@ class UnitTypeCountFeature(object):
 
     return np.concatenate((scaled_features, log_features))
 
+  # 按类型的角色统计...
+  # 返回 【以typelist为序]
   def _get_counts(self, units):
     count = {t: 0 for t in self._type_list}
     for u in units:
       if u.unit_type in count:
         count[u.unit_type] += 1
+    # 返回数组:
     return np.array([count[t] for t in self._type_list], dtype=np.float32)
 
   def _is_in_region(self, unit, region):
@@ -102,7 +117,7 @@ class UnitTypeCountFeature(object):
             unit.float_attr.pos_y >= region[1] and
             unit.float_attr.pos_y < region[3])
 
-
+## 按区战斗单元等分类
 class UnitStatCountFeature(object):
 
   def __init__(self, use_regions=False):
@@ -132,8 +147,9 @@ class UnitStatCountFeature(object):
 
   @property
   def num_dims(self):
-    return len(self._regions) * 2 * 4 * 2
+    return len(self._regions) * 8 * 2
 
+  #生成特征..
   def _generate_features(self, units):
     self_units = [u for u in units
                   if u.int_attr.alliance == ALLY_TYPE.SELF.value]
@@ -165,7 +181,7 @@ class UnitStatCountFeature(object):
             unit.float_attr.pos_y >= region[1] and
             unit.float_attr.pos_y < region[3])
 
-
+##
 class GameProgressFeature(object):
 
   def features(self, observation):
@@ -192,7 +208,7 @@ class GameProgressFeature(object):
   def num_dims(self):
     return 60 + 20 + 8 + 4
 
-
+##
 class ActionSeqFeature(object):
 
   def __init__(self, n_dims_action_space, seq_len):
@@ -220,6 +236,7 @@ class ActionSeqFeature(object):
     return self._n_dims_action_space * len(self._action_seq)
 
 
+## 工人特征
 class WorkerFeature(object):
 
   def features(self, dc):

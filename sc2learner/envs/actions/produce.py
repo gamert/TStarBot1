@@ -10,7 +10,9 @@ from pyxs2.lib.tech_tree import TechTree
 from sc2learner.envs.actions.function import Function
 from sc2learner.envs.common.const import MAXIMUM_NUM
 
-
+##
+## 根据type_id进行生产(小兵)...
+##
 class ProduceActions(object):
 
   def __init__(self, game_version='4.1.2'):
@@ -21,7 +23,8 @@ class ProduceActions(object):
     return Function(name=func_name,
                     function=self._produce_unit(type_id),
                     is_valid=self._is_valid_produce_unit(type_id))
-
+  ## 返回一个Action闭包:
+  ## @type_id:
   def _produce_unit(self, type_id):
 
     def act(dc):

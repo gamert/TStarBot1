@@ -12,6 +12,8 @@ from sc2learner.envs.actions.function import Function
 import sc2learner.envs.common.utils as utils
 
 
+##
+## 根据采集（伐木、矿）...
 class ResourceActions(object):
 
   @property

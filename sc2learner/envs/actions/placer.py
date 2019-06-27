@@ -11,7 +11,8 @@ from pyxs2.lib.typeenums import UNIT_TYPEID as UNIT_TYPE
 import sc2learner.envs.common.utils as utils
 from sc2learner.envs.common.const import PLACE_COLLISION_BUILDINGS
 
-
+##
+## 放置建筑utils...
 class Placer(object):
 
   def get_building_position(self, type_id, dc):
@@ -36,8 +37,8 @@ class Placer(object):
   def _constructable_place(self, margin, dc):
     place = []
     bases = dc.mature_units_of_types([UNIT_TYPE.ZERG_HATCHERY.value,
-                                      UNIT_TYPE.ZERG_LAIR.value,
-                                      UNIT_TYPE.ZERG_HIVE.value])
+                                      UNIT_TYPE.ZERG_LAIR.value,  #二级基地(Zerg Lair)
+                                      UNIT_TYPE.ZERG_HIVE.value]) # 蜂巢(Hive)
     for base in bases:
       search_region = (base.float_attr.pos_x - 10.5,
                        base.float_attr.pos_y - 10.5,

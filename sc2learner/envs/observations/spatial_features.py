@@ -7,7 +7,9 @@ import numpy as np
 from sc2learner.envs.common.const import ALLY_TYPE
 from sc2learner.envs.common.const import MAP
 
-
+## 单位
+# 生成空间（地图）特征: 类似RGB-channel*分辨率
+# 可以理解为每个像素点上的R-G-B的值
 class UnitTypeCountMapFeature(object):
 
   def __init__(self, type_map, resolution):
@@ -30,6 +32,7 @@ class UnitTypeCountMapFeature(object):
     return (max(self._type_map.values()) + 1) * 2
 
   def _generate_features(self, units):
+    # 最大值+1,部分兵合并到一起处理...
     num_channels = max(self._type_map.values()) + 1
     features = np.zeros((num_channels, self._resolution, self._resolution),
                         dtype=np.float32)
@@ -44,7 +47,7 @@ class UnitTypeCountMapFeature(object):
         features[c, int(y), int(x)] += 1.0
     return features / 5.0
 
-
+## 联盟单位分布:
 class AllianceCountMapFeature(object):
 
   def __init__(self, resolution):

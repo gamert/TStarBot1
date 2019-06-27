@@ -66,7 +66,7 @@ def tf_config(ncpu=None):
   config.gpu_options.allow_growth = True
   tf.Session(config=config).__enter__()
 
-
+## 创建环境
 def create_env(difficulty, random_seed=None):
   env = SC2RawEnv(map_name='AbyssalReef',
                   step_mul=FLAGS.step_mul,
